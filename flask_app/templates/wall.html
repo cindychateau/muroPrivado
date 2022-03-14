@@ -11,46 +11,40 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h1>Muro de Coding Dojo</h1>
-            <h2>Bienvenid@ Pedro</h2>
+            <h2>Bienvenid@ {{user.first_name}}</h2>
             <a href="/logout">Logout</a>
         </div>
         <hr>
         <main class="d-flex justify-content-around">
             <div class="col-5">
-                <h2>Tienes 2 mensajes</h2>
-                <hr>
-                <div class="card">
-                    <div class="card-title">Cynthia dice:</div>
-                    <div class="card-text">¿Cómo estás el día de hoy?</div>
-                    <a href="/eliminar/mensaje/ID" class="btn btn-danger">Borrar</a>
-                </div>
+                <h2>Tienes {{messages|length}} mensajes</h2>
 
-                <hr>
-                <div class="card">
-                    <div class="card-title">Miyagi dice:</div>
-                    <div class="card-text">¿Cómo te encuentras?</div>
-                    <a href="/eliminar/mensaje/ID" class="btn btn-danger">Borrar</a>
-                </div>
-
+                {% for message in messages %}
+                    <hr>
+                    <div class="card">
+                        <div class="card-title">{{message.sender}} dice:</div>
+                        <div class="card-text">{{message.content}}</div>
+                        <a href="/eliminar/mensaje/{{message.id}}" class="btn btn-danger">Borrar</a>
+                    </div>
+                {% endfor %}
 
             </div>
             <div class="col-5">
                 <h2>Mandar mensaje</h2>
-                <hr>
 
-                <form action="/send_message" method="post">
-                    <label>Mensaje para Cynthia:</label>
-                    <textarea class="form-control" name="content"></textarea>
-                    <input type="submit" value="Enviar" class="btn btn-success">
-                </form>
-                <hr>
-                <form action="/send_message" method="post">
-                    <label>Mensaje para Miyagi:</label>
-                    <textarea class="form-control" name="content"></textarea>
-                    <input type="submit" value="Enviar" class="btn btn-success">
-                </form>
-
-
+                {% for u in users %}
+                    {% if u.id != user.id %}
+                    <hr>
+                    <form action="/send_message" method="post">
+                        <label>Mensaje para {{u.first_name}}:</label>
+                        <textarea class="form-control" name="content"></textarea>
+                        <input type="hidden" name="sender_id" value="{{user.id}}">
+                        <input type="hidden" name="receiver_id" value="{{u.id}}">
+                        <input type="submit" value="Enviar" class="btn btn-success">
+                    </form>
+                    {% endif %}
+                {% endfor %}
+                
             </div>
         </main>
     </div>

@@ -17,9 +17,9 @@ class User:
         self.updated_at = data['updated_at']
     
     @classmethod
-    def save(cls, data):
+    def save(cls, formulario):
         query = "INSERT INTO users (first_name, last_name, email, password) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s)"
-        nuevoId = connectToMySQL('muro_privado').query_db(query, data)
+        nuevoId = connectToMySQL('muro_privado').query_db(query, formulario)
         return nuevoId
 
     @staticmethod
@@ -81,7 +81,7 @@ class User:
     
     @classmethod
     def get_all(cls):
-        query = "SELECT * FROM users"
+        query = "SELECT * FROM users ORDER BY first_name ASC"
         results = connectToMySQL('muro_privado').query_db(query)
         users = []
         for user in results:
